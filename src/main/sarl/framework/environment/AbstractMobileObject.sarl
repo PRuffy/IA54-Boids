@@ -211,7 +211,7 @@ abstract class AbstractMobileObject extends AbstractSituatedObject implements Mo
 			v *= 0.5f * clock.lastStepDuration
 			v += this.linearMove
 		} else {
-			v = this.linearMove.clone
+			v = new Vector2f(this.linearMove)//.clone provoque erreur
 		}
 
 		// v is a speed - unit: [m/s]
@@ -229,6 +229,7 @@ abstract class AbstractMobileObject extends AbstractSituatedObject implements Mo
 
 		return new Vector2f
 	}
+	
 	/** Compute a kinematic move according to the linear move and to
 	 * the internal attributes of this object.
 	 * 

@@ -36,7 +36,7 @@ import java.text.MessageFormat
  * @version $Name$ $Revision$ $Date$
  */
 abstract class AbstractSituatedObject implements SituatedObject, Serializable {
-
+	
 	val id : UUID 
 	var position = new Point2f
 	var shape : Shape2f<?> 
@@ -163,6 +163,7 @@ abstract class AbstractSituatedObject implements SituatedObject, Serializable {
 		if (Double::isNaN(position.x) || Double::isNaN(position.y)) {
 			System::err.println(
 				MessageFormat::format("**** INVALID POSITION (NaN); object with name '{0}'.", this.name))
+				
 		} else {
 			this.position.set(position)
 		}

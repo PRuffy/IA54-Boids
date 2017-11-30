@@ -115,6 +115,7 @@ class MotionHull2f extends Shape2f<MotionHull2f> {
 
 /*Problème sur direction.clone */
 	override translate(vector : Tuple2f<?>) : MotionHull2f {
+		
 		return new MotionHull2f(new Point2f(this.start.x + vector.x, this.start.y + vector.y), this.direction,this.size)
 	}
 

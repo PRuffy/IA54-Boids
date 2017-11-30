@@ -21,6 +21,7 @@
 package framework.environment;
 
 import framework.environment.Environment;
+import framework.gui.WorldModelStateProvider;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
@@ -53,9 +54,8 @@ public class EnvironmentEvent extends EventObject {
    * @return the state provider.
    */
   @Pure
-  public /* WorldModelStateProvider */Object getStateProvider() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nWorldModelStateProvider cannot be resolved to a type.");
+  public WorldModelStateProvider getStateProvider() {
+    return ((WorldModelStateProvider) this.source);
   }
   
   @SyntheticMember
