@@ -1,0 +1,33 @@
+package boids.environment
+
+import framework.environment.AgentBody
+import framework.math.Shape2f
+import java.util.UUID
+import framework.environment.Frustum
+
+class BoidBody extends AgentBody{
+	/*Variables définit dans les superclasses
+	 *  frustum 
+	 *  maxLinearspeed
+	 *  maxlinearAcceleration
+	 *  maxangularSpeed
+	 *  maxangularAcceleration
+	 *  angle
+	 *  MotionInfluence
+	 *  OtherInfluence
+	 *  perceptions
+	 *  currentAngularspeed
+	 *  linearMove
+	 *  id
+	 *  position
+	 *  shape
+	 *  name
+	 *  type(Serializable)
+	 */
+	new (id : UUID, shape : Shape2f<?>, maxLinearSpeed : float, maxLinearAcceleration : float, maxAngularSpeed : float,
+		maxAngularAcceleration : float, frustum : Frustum) {
+		super(id, shape, maxLinearSpeed, maxLinearAcceleration, maxAngularSpeed, maxAngularAcceleration, frustum)
+		
+	}
+
+}
