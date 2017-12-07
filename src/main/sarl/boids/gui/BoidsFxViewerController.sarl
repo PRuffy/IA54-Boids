@@ -1,0 +1,12 @@
+package boids.gui
+
+import boids.gui.fx.FxViewerController
+import javafx.scene.canvas.Canvas
+import javafx.scene.control.Button
+
+class BoidsFxViewerController extends FxViewerController {
+
+	@FXML var draw_zone : Canvas
+	@FXML var b_start : Button
+
+}
