@@ -20,13 +20,17 @@
  */
 package framework.environment;
 
+import com.google.common.base.Objects;
 import framework.environment.AgentBody;
 import framework.environment.Environment;
 import framework.environment.Influence;
 import framework.environment.InfluenceEvent;
+import framework.environment.Percept;
+import framework.environment.PerceptionEvent;
 import framework.environment.SimulationAgentReady;
 import framework.environment.StartSimulation;
 import framework.environment.StopSimulation;
+import framework.time.TimePercept;
 import io.sarl.core.Behaviors;
 import io.sarl.core.DefaultContextInteractions;
 import io.sarl.core.Initialize;
@@ -40,10 +44,12 @@ import io.sarl.lang.core.Address;
 import io.sarl.lang.core.Agent;
 import io.sarl.lang.core.BuiltinCapacitiesProvider;
 import io.sarl.lang.core.DynamicSkillProvider;
+import io.sarl.lang.core.Scope;
 import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
 import io.sarl.util.OpenEventSpace;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -148,11 +154,30 @@ public class EnvironmentAgent extends Agent {
   }
   
   protected void notifyAgentsOrDie() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method or field UUID is undefined for the type Object"
-      + "\nType mismatch: cannot convert from PerceptionEvent to UUID"
-      + "\nType mismatch: cannot convert from (Object)=>Object to Event"
-      + "\n== cannot be resolved");
+    boolean run = false;
+    float _currentTime = this.environment.getTimeManager().getCurrentTime();
+    float _lastStepDuration = this.environment.getTimeManager().getLastStepDuration();
+    final TimePercept timePercept = new TimePercept(_currentTime, _lastStepDuration);
+    Iterable<? extends AgentBody> _agentBodies = this.environment.getAgentBodies();
+    for (final AgentBody body : _agentBodies) {
+      {
+        run = true;
+        List<Percept> _perceivedObjects = body.getPerceivedObjects();
+        Percept _percept = new Percept(body);
+        PerceptionEvent event = new PerceptionEvent(_perceivedObjects, _percept, timePercept);
+        event.setSource(this.myAdr);
+        final Scope<Address> _function = (Address it) -> {
+          UUID _uUID = it.getUUID();
+          UUID _iD = body.getID();
+          return Objects.equal(_uUID, _iD);
+        };
+        this.space.emit(this.myAdr.getUUID(), event, _function);
+      }
+    }
+    if ((!run)) {
+      Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+      _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.killMe();
+    }
   }
   
   @Extension

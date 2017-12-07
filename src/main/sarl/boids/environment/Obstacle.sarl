@@ -1,0 +1,7 @@
+package boids.environment
+
+import framework.environment.AbstractSituatedObject
+
+class Obstacle extends AbstractSituatedObject{
+	
+}

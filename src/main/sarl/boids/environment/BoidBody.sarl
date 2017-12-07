@@ -24,10 +24,17 @@ class BoidBody extends AgentBody{
 	 *  name
 	 *  type(Serializable)
 	 */
+	 
+	var boidGroup : int
+	
 	new (id : UUID, shape : Shape2f<?>, maxLinearSpeed : float, maxLinearAcceleration : float, maxAngularSpeed : float,
 		maxAngularAcceleration : float, frustum : Frustum) {
 		super(id, shape, maxLinearSpeed, maxLinearAcceleration, maxAngularSpeed, maxAngularAcceleration, frustum)
 		
+	}
+	
+	def getGroup : int{
+		boidGroup
 	}
 
 }

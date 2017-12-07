@@ -20,9 +20,12 @@
  */
 package framework.agent;
 
+import com.google.common.base.Objects;
 import framework.agent.PhysicEnvironment;
 import framework.environment.DynamicType;
 import framework.environment.Influence;
+import framework.environment.InfluenceEvent;
+import framework.environment.KillInfluence;
 import framework.environment.MotionInfluence;
 import framework.math.Vector2f;
 import io.sarl.core.Behaviors;
@@ -35,11 +38,14 @@ import io.sarl.lang.annotation.SarlSourceCode;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import io.sarl.lang.core.Address;
+import io.sarl.lang.core.Scope;
 import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
 import io.sarl.util.OpenEventSpace;
-import java.util.Objects;
+import java.lang.reflect.Array;
+import java.util.List;
 import java.util.UUID;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -75,9 +81,15 @@ public class StandardPhysicEnvironment extends Skill implements PhysicEnvironmen
   }
   
   public void uninstall() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nType mismatch: cannot convert from InfluenceEvent to UUID"
-      + "\nType mismatch: cannot convert from AddressUUIDScope to Event");
+    KillInfluence _killInfluence = new KillInfluence();
+    InfluenceEvent event = new InfluenceEvent(_killInfluence);
+    event.setSource(this.myAdr);
+    final Scope<Address> _function = (Address it) -> {
+      UUID _uUID = it.getUUID();
+      return Objects.equal(_uUID, this.environmentID);
+    };
+    this.physicSpace.emit(this.myAdr.getUUID(), event, _function);
+    this.physicSpace = null;
   }
   
   @DefaultValueSource
@@ -135,11 +147,26 @@ public class StandardPhysicEnvironment extends Skill implements PhysicEnvironmen
   private final static float $DEFAULT_VALUE$INFLUENCESTEERING_1 = 0f;
   
   public void emitInfluences(final MotionInfluence motionInfluence, final Influence... otherInfluences) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method or field UUID is undefined for the type Object"
-      + "\nType mismatch: cannot convert from InfluenceEvent to UUID"
-      + "\nType mismatch: cannot convert from (Object)=>Object to Event"
-      + "\n== cannot be resolved");
+    Influence[] influences = null;
+    boolean _isEmpty = ((List<Influence>)Conversions.doWrapArray(otherInfluences)).isEmpty();
+    if (_isEmpty) {
+      Object _newInstance = Array.newInstance(Influence.class, 1);
+      influences = ((Influence[]) _newInstance);
+      influences[0] = motionInfluence;
+    } else {
+      int _length = otherInfluences.length;
+      int _plus = (_length + 1);
+      Object _newInstance_1 = Array.newInstance(Influence.class, _plus);
+      influences = ((Influence[]) _newInstance_1);
+      influences[0] = motionInfluence;
+      System.arraycopy(otherInfluences, 0, influences, 1, otherInfluences.length);
+    }
+    InfluenceEvent event = new InfluenceEvent(influences);
+    final Scope<Address> _function = (Address it) -> {
+      UUID _uUID = it.getUUID();
+      return Objects.equal(_uUID, this.environmentID);
+    };
+    this.physicSpace.emit(this.myAdr.getUUID(), event, _function);
   }
   
   @Extension
@@ -183,10 +210,10 @@ public class StandardPhysicEnvironment extends Skill implements PhysicEnvironmen
     if (getClass() != obj.getClass())
       return false;
     StandardPhysicEnvironment other = (StandardPhysicEnvironment) obj;
-    if (!Objects.equals(this.spaceID, other.spaceID)) {
+    if (!java.util.Objects.equals(this.spaceID, other.spaceID)) {
       return false;
     }
-    if (!Objects.equals(this.environmentID, other.environmentID)) {
+    if (!java.util.Objects.equals(this.environmentID, other.environmentID)) {
       return false;
     }
     return super.equals(obj);
@@ -198,8 +225,8 @@ public class StandardPhysicEnvironment extends Skill implements PhysicEnvironmen
   public int hashCode() {
     int result = super.hashCode();
     final int prime = 31;
-    result = prime * result + Objects.hashCode(this.spaceID);
-    result = prime * result + Objects.hashCode(this.environmentID);
+    result = prime * result + java.util.Objects.hashCode(this.spaceID);
+    result = prime * result + java.util.Objects.hashCode(this.environmentID);
     return result;
   }
 }

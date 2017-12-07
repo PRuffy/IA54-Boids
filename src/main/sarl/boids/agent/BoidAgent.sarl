@@ -6,16 +6,22 @@ package boids.^agent
 import io.sarl.core.Destroy
 import io.sarl.core.Initialize
 import io.sarl.core.Logging
-
-
+import framework.math.Vector2f
+import framework.environment.SituatedObject
+import java.util.ArrayList
+import boids.environment.BoidBody
+import boids.environment.Obstacle
+import java.util.UUID
 
 /** 
  * @author stay
  * 
  */
-agent BoidAgent {
+agent BoidAgent{
 	uses Logging
 
+	var body : UUID
+	
 	on Initialize {
 		// Event trigger before the agent begin to live or to be used.
 		// You should put all the initialization statements in this block of code.
@@ -27,6 +33,95 @@ agent BoidAgent {
 		// You should put all the resource releasing statements in this block of code.
 		info("The agent was stopped.")
 	}
-
 	
+	
+	 
+	 
+	 def computeInfluence(perception : ArrayList<SituatedObject>){
+	 	var influenceVector : Vector2f
+	 	influenceVector = new Vector2f
+	 	var myBody : BoidBody
+		// Trier les perception en obstacle/boids
+		for(p : perception){
+			if(p.getID==this.body){
+				myBody = p as BoidBody
+			}
+		}
+	 	
+	 }
+
+	// Définition des quatres force de bases pour obtenir l'influence du Boids.
+	//Force de répulsion provoqué par les Boids d'un autre type et des obstacle
+	def repulsionForce(perception : ArrayList<SituatedObject>, myBody : BoidBody) : Vector2f{
+		var tempVect : Vector2f
+		tempVect = new Vector2f
+		
+		return tempVect
+	}
+	
+	//Force de cohésion par les boids de même type
+	def cohesionForce(perception : ArrayList<BoidBody>, myBody : BoidBody) : Vector2f{
+	 	var tempVect : Vector2f
+	 	tempVect = new Vector2f
+	 	var nbTot = 0
+	 	
+	 	for(otherBoid : perception){
+	 		if(otherBoid.getID!=this.body && otherBoid.group == myBody.group){
+	 			nbTot++
+	 			tempVect+=new Vector2f(otherBoid.getPosition-myBody.getPosition)
+	 		}
+	 	}
+		
+		if(nbTot>0){
+			tempVect=tempVect/nbTot
+		}
+		
+		return tempVect
+	}
+	
+	//Force d'alignement par les boids de même type
+	def alignementForce(perception : ArrayList<BoidBody>, myBody : BoidBody) : Vector2f{
+		var tempVect : Vector2f
+		tempVect = new Vector2f
+		var alignement : Vector2f
+		alignement  = new Vector2f
+		var nbTot = 0
+		
+		for(otherBoid : perception){
+			if(otherBoid.getID!=this.body && otherBoid.group == myBody.group){
+				nbTot++
+				tempVect.set(otherBoid.getCurrentLinearMotion)
+				tempVect = tempVect/otherBoid.getCurrentLinearSpeed
+				alignement+=tempVect
+			}
+		}
+		
+		if(nbTot > 0){
+			alignement = alignement/nbTot
+		}
+		
+		return alignement
+	}
+
+	//Force de séparation par les boids de même type
+	def separationForce(perception : ArrayList<BoidBody>, myBody : BoidBody) : Vector2f{
+		var temp : Vector2f
+		var force : Vector2f
+		force = new Vector2f
+		var len : float
+		var nbTot = 0
+		
+		for(otherBoid : perception){
+			if(otherBoid.getID != this.body && otherBoid.group == myBody.group){
+				nbTot++
+				temp = new Vector2f(myBody.position - otherBoid.position)
+				len = temp.lengthSquared
+				temp=temp/len
+				
+				force+=temp
+			}
+		}
+		
+		return force
+	}
 }
