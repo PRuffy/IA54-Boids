@@ -1,0 +1,25 @@
+package boids.^agent
+
+import java.util.List
+import framework.environment.SituatedObject
+import framework.environment.MotionInfluence
+import java.util.UUID
+
+event Perception{
+	val list : List<SituatedObject>
+	val bodyID : UUID
+	new(perception : List<SituatedObject>, id : UUID){
+		list = perception
+		bodyID = id
+	}
+}
+
+event BoidInfluence{
+	val motionInfluence : MotionInfluence
+	
+	new(influence : MotionInfluence){
+		motionInfluence = influence
+	}
+}
+
+event AllInfluenceReceived

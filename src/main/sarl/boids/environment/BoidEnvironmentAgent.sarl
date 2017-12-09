@@ -1,0 +1,42 @@
+package boids.environment
+
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Initialize
+import java.util.List
+import boids.^agent.BoidInfluence
+import framework.environment.MotionInfluence
+import boids.^agent.AllInfluenceReceived
+
+import java.util.UUID
+
+agent BoidEnvironmentAgent {
+	
+	uses DefaultContextInteractions
+	
+	var listOfBoids : List<BoidBody>
+	var quadTree : QuadTree
+	var listOfInfluence : List<MotionInfluence>
+	
+	var ID : UUID
+	
+	on Initialize{
+		
+	}
+	
+	on BoidInfluence{
+		listOfInfluence.add(occurrence.motionInfluence)
+		if(listOfInfluence.size == listOfBoids.size){
+			emit(new AllInfluenceReceived)[it.UUID == this.ID]
+		}
+	}
+	
+	on AllInfluenceReceived{
+		
+	}
+	
+	def computePerception{
+		for(boid : listOfBoids){
+			
+		}
+	}
+}
